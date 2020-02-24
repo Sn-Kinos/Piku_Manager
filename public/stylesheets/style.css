@@ -1,0 +1,11 @@
+section {
+  display: flex;
+  height: calc(100vh - 130px);
+  padding: 10px;
+}
+section article.miu-hideScroll {
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #273869;
+  margin-left: 0;
+}

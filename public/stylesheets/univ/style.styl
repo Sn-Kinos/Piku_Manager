@@ -1,0 +1,117 @@
+MOBILE_RESPONSIVE = 640px
+TABLET_RESPONSIVE = 1024px
+DEFAULT_FONT = 'NanumSquare'
+COLOR_GRN = #18d9b8
+COLOR_MBK = #282828
+COLOR_SBK = #323232
+
+*
+  box-sizing border-box
+  word-break keep-all
+  margin auto
+
+html
+  font-size 20px
+  @media (max-width TABLET_RESPONSIVE), (max-height MOBILE_RESPONSIVE)
+    font-size 15px
+
+body
+  position relative
+  margin 0
+  padding-top 80px
+  font-family DEFAULT_FONT, sans-serif
+  @media (max-width MOBILE_RESPONSIVE), (max-height MOBILE_RESPONSIVE)
+    padding-top 55px
+
+h1, h2, h3, h4, h5, h6, p, ul, ol, dl
+  margin 0
+  padding 0
+
+li
+  list-style none
+  margin 0
+
+address
+  font-style normal
+
+a
+  text-decoration none
+  color inherit
+
+img
+  -moz-user-select none
+  -webkit-user-select none
+  -ms-user-select none
+  user-select none
+  -webkit-user-drag none
+  user-drag none
+  -webkit-touch-callout none
+
+input, select, textarea
+  padding 0
+  border none
+  -webkit-border-radius 0
+  -moz-border-radius 0
+  border-radius 0
+  margin 0
+  font-family DEFAULT_FONT, Helvetica
+  font-size inherit
+  outline none
+  resize none
+  -webkit-appearance none
+  -moz-appearance none
+  appearance none
+
+  &[type=password]
+    font-family system-ui
+
+    &::placeholder
+      font-family DEFAULT_FONT
+
+  &[type=radio]
+    -webkit-appearance radio
+    -moz-appearance radio
+    appearance radio
+
+button
+  padding 0
+  border none
+  background none
+  margin 0
+  outline none
+  cursor pointer
+  font-family DEFAULT_FONT, sans-serif
+  font-size inherit
+  color inherit
+
+label
+  cursor pointer
+
+mark
+  background none
+
+table
+  border none
+  border-collapse collapse
+
+  *
+    padding 0
+
+vr
+  display inline-block
+  width 0
+  height 100%
+  margin 0 .5rem
+  border-left 1px solid #ffffff
+  vertical-align top
+
+[contenteditable=true]
+  outline none
+
+.container
+  margin auto
+  width calc(100% - 140px)
+  max-width 1780px
+
+  @media (max-width TABLET_RESPONSIVE)
+    width calc(100% - 50px)

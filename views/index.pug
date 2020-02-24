@@ -1,0 +1,13 @@
+extends layout
+
+block layout-head
+  link(rel='stylesheet', href='/stylesheets/style.css')
+
+block layout-body
+  section
+    article.miu-hideScroll
+      ul
+        for x, y in piku
+          li
+            a(href=`#${y}`)= y
+    article
