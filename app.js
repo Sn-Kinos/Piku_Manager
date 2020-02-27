@@ -19,7 +19,24 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(stylus.middleware(path.join(__dirname, 'public')));
+
+// Stylus 기본값 설정
+function compile(str, path) {
+  return stylus(str)
+      .set('filename', path)
+      .set('compress', true)
+      .define('DEFAULT_FONT', 'Noto Sans KR')
+      .define('MOBILE_RESPONSIVE', new stylus.Parser('640px').peek().val)
+      .define('TABLET_RESPONSIVE', new stylus.Parser('1024px').peek().val)
+}
+
+// Stylus 를 CSS 로 컴파일하는 미들웨어
+app.use(stylus.middleware({
+  src: path.join(__dirname, 'public'),
+  force: true,
+  compile: compile
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);

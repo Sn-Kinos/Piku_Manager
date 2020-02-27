@@ -8,6 +8,78 @@ block layout-body
     article.miu-hideScroll
       ul
         for x, y in piku
-          li
+          li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}`)
             a(href=`#${y}`)= y
-    article
+    article.yt
+      div#info-box
+        h3#no no
+        input#title(type="text" placeholder="제목" maxlength=40)
+        input#yt-link(type="text" placeholder="영상 링크")
+
+      div#yt-box
+        div#player
+  script.
+    var player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        width: '',
+        height: '',
+        videoId: '',
+        playerVars: JSON.stringify({
+          loop: "1",
+          iv_load_policy: "3",
+          mute: "0",
+          enablejsapi: "1",
+          widgetid: "1",
+        }),
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+
+    function onPlayerStateChange(event) {}
+
+    (function () {
+      document.getElementsByClassName('miu-hideScroll')[0].scrollTo({
+        top: document.getElementsByClassName('not')[0].offsetTop - 200,
+      })
+
+      document.getElementById('title').addEventListener('focusout', function () {
+        $.ajax({
+          type: "POST",
+          url: "https://www.piku.co.kr/w/make/img_chg.php",
+          data: "uid=3UawjY&dno=" + document.getElementById('no').innerText + "&iname=" + this.value,
+          success: function (data) {
+            if (data == "true") {
+              console.log("변경되었습니다.");
+            } else {
+              console.log("변경에 실패하였습니다.");
+            }
+          }
+        });
+      });
+
+      window.addEventListener('hashchange', async function () {
+        const id = location.hash.substring(1);
+        let start;
+        $.get('/' + id, {}, async function (data) {
+          document.getElementById('no').innerHTML = data.no;
+          document.getElementById('title').value = data.title;
+          document.getElementById('yt-link').value = 'https://www.youtube.com/watch?v=' + id;
+          start = data.title.match(/\([0-9]:[0-9]+\)/) || '(0:00)';
+          if (start) {
+            start = start[0].substr(1, start[0].length - 2)
+            await player.loadVideoById(id, await numeral(start)._value, 'large')
+            await player.playVideo();
+          }
+        });
+      })
+    })();
+  script(src="https://www.youtube.com/iframe_api")

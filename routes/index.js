@@ -41,19 +41,19 @@ router.post('/refresh', async (req, res) => {
       //
       // const json = await add.text();
       // console.log(json)
-      const add = await request.post({
-        uri: `http://www.piku.co.kr/w/make/video_upload.php`,
-        method: 'post',
-        form: {
-          u: config.PIKU_ID,
-          v: `https://www.youtube.com/watch?v=${key}`,
-          vs: 0,
-          ve: 0,
-        },
-        headers: {
-          cookie: 'PHPSESSID=4hcqt01pedtui54t5224kcfj52'
-        },
-      });
+      // const add = await request.post({
+      //   uri: `http://www.piku.co.kr/w/make/video_upload.php`,
+      //   method: 'post',
+      //   form: {
+      //     u: config.PIKU_ID,
+      //     v: `https://www.youtube.com/watch?v=${key}`,
+      //     vs: 0,
+      //     ve: 0,
+      //   },
+      //   headers: {
+      //     cookie: config.PHPSESSID,
+      //   },
+      // });
       console.log(add)
     }
 
@@ -63,7 +63,9 @@ router.post('/refresh', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-
+  const piku = await fs.readFileSync('./db/piku.json');
+  const pikuJson = JSON.parse(piku.toString());
+  res.status(200).json(pikuJson[req.params.id])
 });
 
 module.exports = router;

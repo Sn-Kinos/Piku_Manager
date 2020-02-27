@@ -1,11 +1,1 @@
-section {
-  display: flex;
-  height: calc(100vh - 130px);
-  padding: 10px;
-}
-section article.miu-hideScroll {
-  height: 100%;
-  padding: 10px;
-  border: 1px solid #273869;
-  margin-left: 0;
-}
+body{padding:20px;height:100vh;display:flex;flex-direction:column}section{display:flex;width:100%;height:calc(100% - 72px);}section article.miu-hideScroll{width:180px;height:100%;padding:10px;border:1px solid #273869;}section article.miu-hideScroll li{text-align:center;}section article.miu-hideScroll li.modified{color:#20ad20}section article.miu-hideScroll li:hover{background-color:#eee}section article.miu-hideScroll li a{display:inline-block;width:100%;height:2rem;line-height:2rem}section article.yt{width:calc(100% - 180px);height:100%;display:flex;}section article.yt > *{width:100%;position:relative;}section article.yt > *#info-box{height:100%;padding:20px;}section article.yt > *#info-box #no{opacity:.8;margin-bottom:10px}section article.yt > *#info-box #title,section article.yt > *#info-box #yt-link{width:100%;height:3rem;line-height:3rem;font-size:1.5rem;padding:.5rem;border:1px solid #273869;margin-bottom:20px}section article.yt > *#yt-box{height:0;padding-bottom:28.125%;margin-top:20px;}section article.yt > *#yt-box iframe{width:100%;height:100%;position:absolute;top:0;bottom:0;left:0;right:0;border:0}@media (max-width:1331.2px){section article.yt{padding:20px;flex-direction:column;}section article.yt > *#info-box{order:180628;padding:0;margin-top:20px}section article.yt > *#yt-box{margin:0;padding-bottom:56.25%;order:140317}}
