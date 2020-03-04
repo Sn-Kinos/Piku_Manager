@@ -9,13 +9,15 @@ block layout-body
       ul
         for x, y in piku
           li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}`)
-            a(href=`#${y}`)= y
+            a(href=`#${y}`)= x.url
     article.yt
       div#info-box
         h3#no no
         input#title(type="text" placeholder="제목" maxlength=40)
-        input#yt-link(type="text" placeholder="영상 링크")
-
+        input#url(type="text" placeholder="영상 링크")
+        div
+          input#start(type="number" placeholder="시작")
+          input#end(type="number" placeholder="끝")
       div#yt-box
         div#player
   script.
@@ -53,11 +55,14 @@ block layout-body
 
       document.getElementById('title').addEventListener('focusout', function () {
         $.ajax({
-          type: "POST",
-          url: "https://www.piku.co.kr/w/make/img_chg.php",
-          data: "uid=3UawjY&dno=" + document.getElementById('no').innerText + "&iname=" + this.value,
+          type: "patch",
+          url: "/patch/title/" + document.getElementById('no').innerText,
+          data: {
+            no: document.getElementById('no').innerText,
+            title: this.value
+          },
           success: function (data) {
-            if (data == "true") {
+            if (data === "true") {
               console.log("변경되었습니다.");
             } else {
               console.log("변경에 실패하였습니다.");
@@ -66,19 +71,48 @@ block layout-body
         });
       });
 
+      function youtube_parser(url) {
+        const regExp = /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|&vi?=)([^#&?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : false;
+      }
+
+      const changeVid = function () {
+        if (youtube_parser(document.getElementById('url').value))
+          $.ajax({
+            type: "patch",
+            url: "/patch/video/" + document.getElementById('no').innerText,
+            data: {
+              url: document.getElementById('url').value,
+              start: document.getElementById('start').value,
+              end: document.getElementById('end').value,
+              no: document.getElementById('no').innerText,
+            },
+            success: function (data) {
+              if (data === "true") {
+                console.log("변경되었습니다.");
+              } else {
+                console.log("변경에 실패하였습니다.");
+              }
+            }
+          });
+        else
+          console.error('링크 재확인 요망')
+      };
+
+      document.getElementById('url').addEventListener("focusout", changeVid);
+      document.getElementById('start').addEventListener("focusout", changeVid);
+      document.getElementById('end').addEventListener("focusout", changeVid);
+
       window.addEventListener('hashchange', async function () {
         const id = location.hash.substring(1);
         let start;
         $.get('/' + id, {}, async function (data) {
-          document.getElementById('no').innerHTML = data.no;
+          document.getElementById('no').innerHTML = id;
           document.getElementById('title').value = data.title;
-          document.getElementById('yt-link').value = 'https://www.youtube.com/watch?v=' + id;
-          start = data.title.match(/\([0-9]:[0-9]+\)/) || '(0:00)';
-          if (start) {
-            start = start[0].substr(1, start[0].length - 2)
-            await player.loadVideoById(id, await numeral(start)._value, 'large')
-            await player.playVideo();
-          }
+          document.getElementById('url').value = 'https://www.youtube.com/watch?v=' + data.url;
+          await player.loadVideoById(data.url, parseInt(data.start), 'large')
+          await player.playVideo();
         });
       })
     })();
