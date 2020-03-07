@@ -8,16 +8,16 @@ block layout-body
     article.miu-hideScroll
       ul
         for x, y in piku
-          li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}`)
+          li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}` id=`${y}`)
             a(href=`#${y}`)= x.url
     article.yt
       div#info-box
         h3#no no
-        input#title(type="text" placeholder="제목" maxlength=40)
+        input#title(type="text" placeholder="제목")
         input#url(type="text" placeholder="영상 링크")
         div
-          input#start(type="number" placeholder="시작")
-          input#end(type="number" placeholder="끝")
+          input#start(type="text" placeholder="시작")
+          input#end(type="text" placeholder="끝")
       div#yt-box
         div#player
   script.
@@ -53,17 +53,24 @@ block layout-body
         top: document.getElementsByClassName('not')[0].offsetTop - 200,
       })
 
-      document.getElementById('title').addEventListener('focusout', function () {
+      document.getElementById('title').addEventListener('change', function () {
+        const title = this.value;
         $.ajax({
           type: "patch",
           url: "/patch/title/" + document.getElementById('no').innerText,
           data: {
             no: document.getElementById('no').innerText,
-            title: this.value
+            title: title
           },
           success: function (data) {
             if (data === "true") {
               console.log("변경되었습니다.");
+              if (title.match(/[0-9]:[0-9]+/)) {
+                document.getElementById(document.getElementById('no').innerText).classList.add('modified')
+              } else {
+                document.getElementById(document.getElementById('no').innerText).classList.remove('modified')
+              }
+              document.getElementById('count').innerText = document.getElementsByClassName('modified').length;
             } else {
               console.log("변경에 실패하였습니다.");
             }
@@ -88,9 +95,11 @@ block layout-body
               end: document.getElementById('end').value,
               no: document.getElementById('no').innerText,
             },
-            success: function (data) {
+            success: async function (data) {
               if (data === "true") {
                 console.log("변경되었습니다.");
+                await player.loadVideoById(youtube_parser(document.getElementById('url').value), parseInt(document.getElementById('start').value), 'large')
+                document.getElementById(document.getElementById('no').innerText).firstElementChild.innerText = youtube_parser(document.getElementById('url').value)
               } else {
                 console.log("변경에 실패하였습니다.");
               }
@@ -100,9 +109,9 @@ block layout-body
           console.error('링크 재확인 요망')
       };
 
-      document.getElementById('url').addEventListener("focusout", changeVid);
-      document.getElementById('start').addEventListener("focusout", changeVid);
-      document.getElementById('end').addEventListener("focusout", changeVid);
+      document.getElementById('url').addEventListener("change", changeVid);
+      document.getElementById('start').addEventListener("change", changeVid);
+      document.getElementById('end').addEventListener("change", changeVid);
 
       window.addEventListener('hashchange', async function () {
         const id = location.hash.substring(1);
@@ -111,8 +120,13 @@ block layout-body
           document.getElementById('no').innerHTML = id;
           document.getElementById('title').value = data.title;
           document.getElementById('url').value = 'https://www.youtube.com/watch?v=' + data.url;
+          document.getElementById('start').value = data.start;
+          document.getElementById('end').value = data.end;
           await player.loadVideoById(data.url, parseInt(data.start), 'large')
           await player.playVideo();
+          document.getElementsByClassName('miu-hideScroll')[0].scrollTo({
+            top: document.getElementById(id).offsetTop - document.getElementsByClassName('miu-hideScroll')[0].offsetHeight / 2,
+          })
         });
       })
     })();

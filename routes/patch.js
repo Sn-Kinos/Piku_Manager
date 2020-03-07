@@ -14,6 +14,7 @@ router.patch('/title/:id', async (req, res, next) => {
       'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
     }
   });
+  next();
 }, dbUpdate);
 
 router.patch('/video/:id', async (req, res, next) => {
@@ -33,6 +34,8 @@ router.patch('/video/:id', async (req, res, next) => {
       'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
     },
   });
+  console.log(changeVid);
+  next();
 }, dbUpdate);
 
 module.exports = router;
