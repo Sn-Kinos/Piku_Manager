@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   const pikuJson = JSON.parse(piku.toString());
 
   res.render('index', {
-    title: '보컬로이드 월드컵 512곡 얼리 액세스',
+    title: '보컬로이드 월드컵 얼리 액세스',
     piku: pikuJson
   });
 });
