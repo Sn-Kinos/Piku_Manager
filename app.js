@@ -26,7 +26,8 @@ function compile(str, path) {
   return stylus(str)
       .set('filename', path)
       .set('compress', true)
-      .define('DEFAULT_FONT', 'Noto Sans KR')
+      .define('DEFAULT_FONT', 'NanumSquare')
+      .define('SUB_FONT', 'Nanum Barun Gothic')
       .define('MOBILE_RESPONSIVE', new stylus.Parser('640px').peek().val)
       .define('TABLET_RESPONSIVE', new stylus.Parser('1024px').peek().val)
 }

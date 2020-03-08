@@ -12,12 +12,11 @@ block layout-body
             a(href=`#${y}`)= x.url
     article.yt
       div#info-box
-        h3#no no
-        input#title(type="text" placeholder="제목")
-        input#url(type="text" placeholder="영상 링크")
+        input#title(type="text" placeholder="제목" disabled)
+        input#url(type="text" placeholder="영상 링크" disabled)
         div
-          input#start(type="text" placeholder="시작")
-          input#end(type="text" placeholder="끝")
+          input#start(type="text" placeholder="시작" disabled)
+          input#end(type="text" placeholder="끝" disabled)
       div#yt-box
         div#player
   script.
@@ -53,81 +52,25 @@ block layout-body
         top: document.getElementsByClassName('not')[0].offsetTop - 200,
       })
 
-      document.getElementById('title').addEventListener('change', function () {
-        const title = this.value;
-        $.ajax({
-          type: "patch",
-          url: "/patch/title/" + document.getElementById('no').innerText,
-          data: {
-            no: document.getElementById('no').innerText,
-            title: title
-          },
-          success: function (data) {
-            if (data === "true") {
-              console.log("변경되었습니다.");
-              if (title.match(/[0-9]:[0-9]+/)) {
-                document.getElementById(document.getElementById('no').innerText).classList.add('modified')
-              } else {
-                document.getElementById(document.getElementById('no').innerText).classList.remove('modified')
-              }
-              document.getElementById('count').innerText = document.getElementsByClassName('modified').length;
-            } else {
-              console.log("변경에 실패하였습니다.");
-            }
-          }
-        });
-      });
-
       function youtube_parser(url) {
         const regExp = /^.*(youtu\.be\/|vi?\/|u\/\w\/|embed\/|\?vi?=|&vi?=)([^#&?]*).*/;
         const match = url.match(regExp);
         return (match && match[2].length === 11) ? match[2] : false;
       }
 
-      const changeVid = function () {
-        if (youtube_parser(document.getElementById('url').value))
-          $.ajax({
-            type: "patch",
-            url: "/patch/video/" + document.getElementById('no').innerText,
-            data: {
-              url: document.getElementById('url').value,
-              start: document.getElementById('start').value,
-              end: document.getElementById('end').value,
-              no: document.getElementById('no').innerText,
-            },
-            success: async function (data) {
-              if (data === "true") {
-                console.log("변경되었습니다.");
-                await player.loadVideoById(youtube_parser(document.getElementById('url').value), parseInt(document.getElementById('start').value), 'large')
-                document.getElementById(document.getElementById('no').innerText).firstElementChild.innerText = youtube_parser(document.getElementById('url').value)
-              } else {
-                console.log("변경에 실패하였습니다.");
-              }
-            }
-          });
-        else
-          console.error('링크 재확인 요망')
-      };
-
-      document.getElementById('url').addEventListener("change", changeVid);
-      document.getElementById('start').addEventListener("change", changeVid);
-      document.getElementById('end').addEventListener("change", changeVid);
-
       window.addEventListener('hashchange', async function () {
         const id = location.hash.substring(1);
         let start;
-        $.get('/' + id, {}, async function (data) {
-          document.getElementById('no').innerHTML = id;
+        $.get('/db/' + id, {}, async function (data) {
           document.getElementById('title').value = data.title;
           document.getElementById('url').value = 'https://www.youtube.com/watch?v=' + data.url;
           document.getElementById('start').value = data.start;
           document.getElementById('end').value = data.end;
           await player.loadVideoById(data.url, parseInt(data.start), 'large')
           await player.playVideo();
-          document.getElementsByClassName('miu-hideScroll')[0].scrollTo({
-            top: document.getElementById(id).offsetTop - document.getElementsByClassName('miu-hideScroll')[0].offsetHeight / 2,
-          })
         });
-      })
+      });
+
+      document.getElementById('count').innerText = document.getElementsByClassName('modified').length;
     })();
   script(src="https://www.youtube.com/iframe_api")

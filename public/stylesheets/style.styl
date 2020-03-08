@@ -14,30 +14,39 @@ section
     height: 100%
     padding: 10px
     border: 1px solid #273869
+
     li
       text-align: center;
+
       &.modified
         color: #20AD20
+
       &:hover
         background-color: #eeeeee
+
       a
         display: inline-block;
         width: 100%
         height: 2rem
         line-height: 2rem
+
   article.yt
     width: calc(100% - 180px)
     height: 100%
     display: flex;
+
     & > *
       width: 100%
       position: relative;
+
       &#info-box
         height: 100%
         padding: 20px
+
         #no
           opacity: .8
           margin-bottom: 10px
+
         input
           width: 100%
           height: 3rem
@@ -46,6 +55,12 @@ section
           padding: .5rem
           border: 1px solid #273869
           margin-bottom: 20px
+
+          &:disabled
+            opacity: 1
+            -webkit-text-fill-color: COLOR_MBK;
+            color: COLOR_MBK
+
           &#start
           &#end
             width: 50%
@@ -54,6 +69,7 @@ section
         height: 0
         padding-bottom: 56.25% * 0.5
         margin-top: 20px
+
         iframe
           width: 100%
           height: 100%
@@ -63,17 +79,47 @@ section
           left: 0
           right: 0
           border: 0
+
 @media (max-width TABLET_RESPONSIVE * 1.3)
   section
     article.yt
       padding: 20px
       flex-direction: column;
+
       & > *
         &#info-box
           order 180628
           padding: 0
           margin-top: 20px
+
         &#yt-box
           margin: 0
           padding-bottom: 56.25%
           order 140317
+
+@media (max-width MOBILE_RESPONSIVE)
+  section
+    flex-direction: column;
+
+    article.miu-hideScroll
+      width: 100%
+      height: 40%
+      order 180628
+
+    article.yt
+      width: 100%
+      height: 60%
+      order 140317
+      padding: 0
+
+      & > *
+        &#info-box
+          order 180628
+          padding: 0
+          margin-top: 20px
+
+        &#yt-box
+          margin: 0
+          padding-bottom: 56.25%
+          order 140317
+
