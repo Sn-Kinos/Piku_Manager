@@ -1,16 +1,16 @@
 header#header
     h1= title
-    //button#refresh 새로고침
-    span 수정한 개수:&nbsp;
+    button#refresh 재반영
+    span &nbsp;수정한 개수:&nbsp;
         span#count ?
     script.
         (function () {
             document.getElementById('refresh').addEventListener('click', function (event) {
                 $.post(
-                    '/refresh',
+                    '/overwrite',
                     {},
                     function () {
-
+                        location.reload();
                     }
                 )
             });
