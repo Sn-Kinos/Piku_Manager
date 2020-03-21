@@ -1,6 +1,7 @@
 header#header
     h1= title
-    button#refresh 재반영
+    - if (title === 'PIKU MANAGER')
+        button#refresh 재반영
     span &nbsp;수정한 개수:&nbsp;
         span#count ?
     script.

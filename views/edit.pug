@@ -8,8 +8,10 @@ block layout-body
     article.miu-hideScroll
       ul
         for x, y in piku
-          li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}` id=`${y}`)
-            a(href=`#${y}`)= x.url
+          li(class=`${(x.title.match(/[0-9]:[0-9]+/)) ? 'modified' : 'not'}` id=`${y}` data-url=`${x.url}`)
+            a(href=`#${y}`)
+              p= x.title
+              = x.url
     article.yt
       div#info-box
         h3#no no
@@ -63,13 +65,14 @@ block layout-body
             title: title
           },
           success: function (data) {
-            if (data === "true") {
+            if (data) {
               console.log("변경되었습니다.");
               if (title.match(/[0-9]:[0-9]+/)) {
                 document.getElementById(document.getElementById('no').innerText).classList.add('modified')
               } else {
                 document.getElementById(document.getElementById('no').innerText).classList.remove('modified')
               }
+              document.getElementById(document.getElementById('no').innerText).lastElementChild.firstElementChild.innerText = data.title
               document.getElementById('count').innerText = document.getElementsByClassName('modified').length;
             } else {
               console.log("변경에 실패하였습니다.");
@@ -96,10 +99,11 @@ block layout-body
               no: document.getElementById('no').innerText,
             },
             success: async function (data) {
-              if (data === "true") {
+              if (data) {
                 console.log("변경되었습니다.");
-                await player.loadVideoById(youtube_parser(document.getElementById('url').value), parseFloat(document.getElementById('start').value), 'large')
-                document.getElementById(document.getElementById('no').innerText).firstElementChild.innerText = youtube_parser(document.getElementById('url').value)
+                const id = youtube_parser(document.getElementById('url').value)
+                await player.loadVideoById(id, parseFloat(document.getElementById('start').value), 'large')
+                document.getElementById(document.getElementById('no').innerText).lastElementChild.innerHTML = `<p>${data.title}</p>${id}`
               } else {
                 console.log("변경에 실패하였습니다.");
               }
