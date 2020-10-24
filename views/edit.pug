@@ -51,9 +51,11 @@ block layout-body
     function onPlayerStateChange(event) {}
 
     (function () {
-      document.getElementsByClassName('miu-hideScroll')[0].scrollTo({
-        top: document.getElementsByClassName('not')[0].offsetTop - 200,
-      })
+      try {
+        document.getElementsByClassName('miu-hideScroll')[0].scrollTo({
+          top: document.getElementsByClassName('not')[0].offsetTop - 200,
+        })
+      } catch {}
 
       document.getElementById('title').addEventListener('change', function () {
         const title = this.value;
